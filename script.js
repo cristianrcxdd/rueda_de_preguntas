@@ -108,8 +108,9 @@ function spin(d) {
         .each("end", function () {
             d3.select(".slice:nth-child(" + (picked + 1) + ") path")
                 .attr("fill", "#111");
+            var selectedQuestion = data[picked].question;
             d3.select("#question h1")
-                .text(data[picked].question);
+                .text(selectedQuestion);
             oldrotation = rotation;
 
             var questionSound = document.getElementById("questionSound");
@@ -117,11 +118,19 @@ function spin(d) {
       
             var historyTable = d3.select("#history tbody");
             historyTable.append("tr")
-                .html("<td>" + data[picked].label + "</td><td>" + data[picked].question + "</td>");
+                .html("<td>" + data[picked].label + "</td><td>" + selectedQuestion + "</td>");
       
             container.on("click", spin);
+
+            Swal.fire({
+              title: 'Pregunta seleccionada:',
+              text: selectedQuestion,
+              icon: 'info',
+              confirmButtonText: 'Entendido'
+            });
         });
 }
+
 svg.append("g")
     .attr("transform", "translate(" + (w + padding.left + padding.right) + "," + ((h/2)+padding.top) + ")")
     .append("path")
