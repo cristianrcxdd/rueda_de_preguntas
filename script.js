@@ -85,6 +85,10 @@ function spin(d) {
     if (oldpick.length == data.length) {
         console.log("done");
         container.on("click", null);
+        document.getElementById("restartButton").style.display = "block";
+        document.getElementById("restartButton").addEventListener("click", function() {
+        location.reload();
+});
         return;
     }
     var ps = 360 / data.length,
