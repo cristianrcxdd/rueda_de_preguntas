@@ -16,12 +16,18 @@ function promptNumberOfQuestions() {
 
 function promptQuestion(index) {
     var question = prompt("Por favor ingresa la pregunta " + index + ":");
-    data.push({
-        "label": "Pregunta " + index,
-        "value": index,
-        "question": question
-    });
+    if (question.trim() === "") {
+        alert("Por favor ingresa una pregunta válida.");
+        promptQuestion(index); 
+    } else {
+        data.push({
+            "label": "Pregunta " + index,
+            "value": index,
+            "question": question
+        });
+    }
 }
+
 
 promptNumberOfQuestions();
 
@@ -74,7 +80,8 @@ container.on("click", spin);
 
 function spin(d) {
     container.on("click", null);
-    
+    var spinSound = document.getElementById("spinSound");
+    spinSound.play();
     if (oldpick.length == data.length) {
         console.log("done");
         container.on("click", null);
@@ -96,7 +103,7 @@ function spin(d) {
     }
     rotation += 90 - Math.round(ps / 2);
     vis.transition()
-        .duration(3000)
+        .duration(5000)
         .attrTween("transform", rotTween)
         .each("end", function () {
             d3.select(".slice:nth-child(" + (picked + 1) + ") path")
@@ -104,8 +111,10 @@ function spin(d) {
             d3.select("#question h1")
                 .text(data[picked].question);
             oldrotation = rotation;
+
+            var questionSound = document.getElementById("questionSound");
+            questionSound.play();
       
-            // Agregar la pregunta al historial
             var historyTable = d3.select("#history tbody");
             historyTable.append("tr")
                 .html("<td>" + data[picked].label + "</td><td>" + data[picked].question + "</td>");
@@ -113,7 +122,6 @@ function spin(d) {
             container.on("click", spin);
         });
 }
-
 svg.append("g")
     .attr("transform", "translate(" + (w + padding.left + padding.right) + "," + ((h/2)+padding.top) + ")")
     .append("path")
@@ -130,8 +138,8 @@ container.append("text")
     .attr("x", 0)
     .attr("y", 15)
     .attr("text-anchor", "middle")
-    .text("SPIN")
-    .style({"font-weight":"bold", "font-size":"30px"});
+    .text("Girar")
+    .style({"font-weight":"bold", "font-size":"30px","cursor":"pointer"});
 
 function rotTween(to) {
   var i = d3.interpolate(oldrotation % 360, rotation);
